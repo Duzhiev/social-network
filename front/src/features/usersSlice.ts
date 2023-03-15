@@ -1,28 +1,28 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios"
+import { InitialState, User } from "./types";
 
-const initialState = {
+const initialState: InitialState = {
   users: [],
   error: null,
   loading: false,
 };
 
+
 export const fetchUser = createAsyncThunk(
   "users/fetch",
   async (_, thunkAPI) => {
     try {
-      const res = await fetchUser("http://localhost:4000/users");
-      const users = await res.json();
-
-      if (users.error) {
-        return thunkAPI.rejectWithValue(users.error);
-      }
+      const res = await axios.get<User[]>("http://localhost:4000/users")
+      const users = res.data;
 
       return thunkAPI.fulfillWithValue(users);
     } catch (error) {
-      thunkAPI.rejectWithValue(error.message);
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
+
 const usersSlice = createSlice({
   name: "users",
   initialState,
@@ -34,7 +34,7 @@ const usersSlice = createSlice({
         state.loading = false;
       })
       .addCase(fetchUser.rejected, (state, action) => {
-        state.error = action.payload;
+        state.error = action.payload as string;
         state.loading = false;
       })
       .addCase(fetchUser.pending, (state) => {

@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { fetchUser } from "../features/usersSlice";
+import { useAppDispatch } from "../hooks/useAppDispatch";
+import { useTypedSelector } from "../hooks/useTypedSelector";
 
 const MainPage = () => {
-  const dispatch = useDispatch();
-  const users = useSelector((state) => state.users);
-  const error = useSelector((state) => state.error);
-  const loading = useSelector((state) => state.loading);
+  const dispatch = useAppDispatch();
+
+  const users = useTypedSelector((state) => state.users.users);
+  const error = useTypedSelector((state) => state.users.error);
+  const loading = useTypedSelector((state) => state.users.loading);
 
   useEffect(() => {
     dispatch(fetchUser());
@@ -15,6 +17,7 @@ const MainPage = () => {
   if (loading) {
     return <div>Loading...</div>;
   }
+  
   return (
     <div>
       {users.map((user) => {

@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { FC } from 'react';
 import MainPage from './MainPage/MainPage';
 
-const App = () => {
+const App: FC = () => {
     return (
         <div>
           <MainPage />
-         </div>
+        </div>
     );
 };
 
